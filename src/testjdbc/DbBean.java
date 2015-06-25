@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DbBean {
-	 	private String jdbcUrl = "jdbc:mysql://localhost:3306/comhere";
+	 	private String jdbcUrl = "jdbc:mysql://localhost:3306/ooo";
 	    private String username = "aaa";
 	    private String password = "1234";
 	    
