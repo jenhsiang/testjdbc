@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 public class DbBean {
-	 	private String jdbcUrl = "jdbc:mysql://localhost:3306/caldata";
-	    private String username = "sea392";
-	    private String password = "31343134";
+	 	private String jdbcUrl = "jdbc:mysql://localhost:3306/comhere";
+	    private String username = "aaa";
+	    private String password = "1234";
 	    
 	    public void setPassword(String password) {
 	        this.password = password;
@@ -66,6 +66,51 @@ public class DbBean {
 	        }
 	        return list;
 	    }
+	    public List  SelectRSwhere(String sql,List paraObj)  {
+	    	List list = new ArrayList();
+	        Connection conn = null;
+	        SQLException ex = null;
+	        PreparedStatement preparedStatement  = null;
+			ResultSet rs = null;
+			ResultSetMetaData rsmd = null;
+		
+	        try {
+	            conn = DriverManager.getConnection(jdbcUrl, username, password);
+	            if (!conn.isClosed()) {
+	            	preparedStatement = conn.prepareStatement(sql);
+	            	for(int i=0;i<paraObj.size();i++)
+						preparedStatement.setObject(i+1,paraObj.get(i));
+					rs = preparedStatement.executeQuery();
+					 rsmd = rs.getMetaData();
+					while (rs.next()) {
+						Map map = new HashMap(); 
+						int columnCount = rsmd.getColumnCount();
+						for(int i=0;i<columnCount;i++){
+							String columnName = rsmd.getColumnName(i+1);
+							map.put(columnName, rs.getObject(i+1));
+						}
+						list.add(map);
+
+					}
+	            }
+	        } catch (SQLException e) {
+	            ex = e;
+	        } finally {
+	            if (conn != null) {
+	                try {
+	                    conn.close();
+	                } catch (SQLException e) {
+	                    if(ex == null) {
+	                        ex = e;
+	                    }
+	                }
+	            }
+	            if(ex != null) {
+	                throw new RuntimeException(ex);
+	            }
+	        }
+	        return list;
+	    }
 	    
 	    public int InsertData(String sql,List paraObj){
 	    	Connection conn = null;
@@ -79,13 +124,13 @@ public class DbBean {
 			
 				 preparedStatement = conn.prepareStatement(sql);
 				
-				// ¨Ï¥Î Statement °õ¦æ SQL ±Ô­z
+				// ä½¿ç”¨ Statement åŸ·è¡Œ SQL æ•˜è¿°
 				
 				for(int i=0;i<paraObj.size();i++)
 					preparedStatement.setObject(i+1,paraObj.get(i));
 				result = preparedStatement.executeUpdate();
 			}catch(SQLException e){
-				System.out.println("°õ¦æSQL\"" + sql + "\"®Éµo¥Í¨Ò¥~¡G" + e.getMessage());
+				System.out.println("åŸ·è¡ŒSQL\"" + sql + "\"æ™‚ç™¼ç”Ÿä¾‹å¤–ï¼š" + e.getMessage());
 			}finally{
 				if(preparedStatement != null)
 					try {
